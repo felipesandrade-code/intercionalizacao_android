@@ -63,6 +63,12 @@ fun Login() {
         mutableStateOf("")
     }
 
+    var emailError by remember {
+        mutableStateOf(false)
+    }
+
+    var tamanhoSenha = 8
+
     Column(modifier = Modifier.padding(16.dp)) {
         Text(
             text = stringResource(id = R.string.login),
@@ -79,19 +85,31 @@ fun Login() {
                 .padding(32.dp)) {
                 OutlinedTextField(
                     value = email,
-                    onValueChange = { email = it },
+                    onValueChange = {
+                        email = it
+                        if (email.isNotEmpty()) emailError = false
+                        },
                     modifier = Modifier.fillMaxWidth(),
                     label = {
                         Text(text = stringResource(R.string.email))
                     },
+                    isError = emailError,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Email
                     ),
                 )
+                if(emailError){
+                    Text(
+                        text = "E-mail é obrigatório!",
+                        modifier = Modifier.fillMaxWidth(),
+                        color = Color.Red,
+                        textAlign = TextAlign.End
+                    )
+                }
                 Spacer(modifier = Modifier.height(16.dp))
                 OutlinedTextField(
                     value = password,
-                    onValueChange = { password = it },
+                    onValueChange = { if (it.length <= tamanhoSenha) password = it },
                     modifier = Modifier.fillMaxWidth(),
                     label = {
                         Text(text = stringResource(R.string.password))
